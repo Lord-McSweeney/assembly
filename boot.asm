@@ -11,10 +11,10 @@ section .text
     	xor cx, cx
     print1:
         lodsb
-	    or al, al
-	    jz loop
-	    int 0x10
-	    jmp print1
+	or al, al
+	jz loop
+	int 0x10
+        jmp print1
     loop:
         mov ah, 1
         int 0x16
@@ -116,10 +116,10 @@ section .text
         mov ah, 0x0E
     print2:
         lodsb
-	    or al, al
-	    jz done
-	    int 0x10
-	    jmp print2
+	or al, al
+        jz done
+        int 0x10
+	jmp print2
     done:
         cli
         hlt
