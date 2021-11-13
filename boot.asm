@@ -1,5 +1,5 @@
 bits 16
-org 0x7c00
+org 0x7E00
 
 section .text
     init:
@@ -11,10 +11,10 @@ section .text
     	xor cx, cx
     print1:
         lodsb
-	or al, al
-	jz loop
-	int 0x10
-        jmp print1
+	    or al, al
+	    jz loop
+	    int 0x10
+	    jmp print1
     loop:
         mov ah, 1
         int 0x16
@@ -29,17 +29,17 @@ section .text
         je cursorright
         cmp ah, 0x50
         je cursordown
-        cmp al, 3
+        cmp ah, 0x80
         je exit
-        cmp al, 0x15
+        cmp ah, 0x78
         je coloredprintred
-        cmp al, 9
+        cmp ah, 0x79
         je coloredprintyellow
-        cmp al, 0x0F
+        cmp ah, 0x7A
         je coloredprintgreen
-        cmp al, 0x10
+        cmp ah, 0x7B
         je coloredprintblue
-        cmp al, 0x19
+        cmp ah, 0x7C
         je coloredprintblack
         mov ah, 0x0E
         int 0x10
@@ -116,10 +116,10 @@ section .text
         mov ah, 0x0E
     print2:
         lodsb
-	or al, al
-        jz done
-        int 0x10
-	jmp print2
+	    or al, al
+	    jz done
+	    int 0x10
+	    jmp print2
     done:
         cli
         hlt
@@ -127,3 +127,70 @@ section .text
         db "Start typing", 0x0D, 0x0A, 0
     _msg2:
         db "Exiting...", 0x0D, 0x0A, 0
+times 446 - ($-$$) db 0
+db 0x80
+db 0x00
+db 0x01
+db 0x00
+db 0x01
+db 0x00
+db 0x08
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x08
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x00
+db 0x55
+db 0xAA
