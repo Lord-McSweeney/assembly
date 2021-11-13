@@ -1,3 +1,5 @@
+; bugs: entering the first portion of a string (ie "exi") will cause the system to hang and wait.
+
 bits 16
 org 0x7E00
 
@@ -19,6 +21,8 @@ section .text
         jz .kbdstuff
         xor ah, ah
         int 0x16
+        cmp ah, 0x0E
+        je .backspace
         cmp al, 0x0D
         je .execcommand1
         mov ah, 0x0E
@@ -31,6 +35,15 @@ section .text
         xor cx, cx
         mov es, cx
         mov [es:di], al
+        jmp .kbdstuff
+    .backspace:
+        mov ah, 0x0E
+        int 0x10
+        mov ax, 0x0E00
+        int 0x10
+        mov ax, 0x0E08
+        int 0x10
+        dec byte [_kbdbufferlen]
         jmp .kbdstuff
     .execcommand1: ; lookup a command and execute the relative code.
         ;press enter
@@ -53,12 +66,16 @@ section .text
         pop si
         add si, 16
         cmp si, 64
-        je .execcommand2end
+        je .commandnotfound
         cmp al, 0
         je .execcommand2mid
         sub si, 11
         call si
     .execcommand2end:
+        ret
+    .commandnotfound:
+        mov si, _msg3
+        call printstring
         ret
     .kbdbufferflush:
         mov bx, _bufferkbd
@@ -112,7 +129,9 @@ section .text
     _msg1:
         db "Hose starting.", 0x0D, 0x0A, 0
     _msg2:
-        db "cmd> "
+        db "cmd> ", 0
+    _msg3:
+        db "Command not found.", 0x0D, 0x0A, 0
         
 times 368 - ($-$$) db 0
     _cmddata1:
@@ -154,9 +173,9 @@ times 368 - ($-$$) db 0
         db 'a'
         db 'n'
         db 'g'
+        db 0
         db 0xEB
         db 0xFE
-        db 0
         db 0
         db 0
         db 0
