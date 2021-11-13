@@ -37,7 +37,8 @@ section .text
         mov [es:di], al
         jmp .kbdstuff
     .backspace:
-        mov ah, 0x0E
+        cmp [_kbdbufferlen], byte 0
+        je .kbdstuff
         int 0x10
         mov ax, 0x0E00
         int 0x10
