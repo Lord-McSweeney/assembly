@@ -1,32 +1,110 @@
 bits 16
 org 0x7c00
-
+; text mode is 80x25
 section .text
     main:
-        mov si, string
-        mov di, 1
-        call writebytes
-        
-        mov bl, 0x51
-        mov bh, 6
-        mov di, 4
-        call writebyte
+        ;mov si, string
+        ;mov di, 1
+        ;call writebyte
+        ;
+        ;mov bl, 0x51
+        ;mov bh, 6
+        ;mov di, 4
+        ;call writebyte
+        ;
+        ;call getcursorposition
+        ;
+        ;mov bl, 0x51
+        ;mov bh, 6
+        ;mov di, ax
+        ;call writebyte
+        ;
+        ;call getcursorposition
+        ;
+        ;add ax, 1
+        ;
+        ;call setcursorposition
+        xor bl, bl
+        call clearscreen
         
         call getcursorposition
-        
-        mov bl, 0x51
-        mov bh, 6
-        mov di, ax
-        call writebyte
-        
-        call getcursorposition
-        
-        add ax, 2
-        
+        sub ax, 3
         call setcursorposition
+        ;xor di, di
+        ;mov si, string
+        ;call writebytes
+        ;mov ax, 0x0D
+        ;call setcursorposition
+    main.1:
+        ;mov ax, 6
+        ;call waitt
+        ;mov ax, 0xFFFF
+        ;call setcursorposition
+        ;jmp main.1
     exit:
         cli
         hlt
+    string:
+        db "Hello, world!", 0x0
+    movecursorup:
+        ; Moves the cursor up 1 "step". Modifies the AL, BX, and DX registers.
+        call getcursorposition
+        
+        sub ax, 80
+        
+        call setcursorposition
+        ret
+    movecursordown:
+        ; Moves the cursor down 1 "step". Modifies the AL, BX, and DX registers.
+        call getcursorposition
+        
+        add ax, 80
+        
+        call setcursorposition
+        ret
+    movecursorleft:
+        ; Moves the cursor left 1 "step". Modifies the AL, BX, and DX registers.
+        call getcursorposition
+        
+        sub ax, 1
+        
+        call setcursorposition
+        ret
+    movecursorright:
+        ; Moves the cursor right 1 "step". Modifies the AL, BX, and DX registers.
+        call getcursorposition
+        
+        add ax, 1
+        
+        call setcursorposition
+        ret
+    clearscreen:
+        ; Clears the screen (in text mode). Expects BL to be the attributes (color attributes). (This function spills over into clearscreenmid and clearscreenend). Modifies the AX, ES, and DI registers.
+        mov ax, 0xb800
+        mov es, ax
+        xor di, di
+    clearscreenmid:
+        mov [es:di], byte 32
+        inc di
+        mov [es:di], bl
+        
+        cmp di, 2000
+        je clearscreenend
+        
+        inc di
+        jmp clearscreenmid
+    clearscreenend:
+        ret
+    waitt:
+        ; Waits for an amount of time ~= (AX * 55 milliseconds). (This function spills over into waitmid and waitend). Modifies the BX register. AX register may change.
+        xor bx, bx
+    waitmid:
+        hlt
+        cmp bx, ax
+        je waitend
+        inc bx
+    waitend:
+        ret
     setcursorposition:
         ; Sets the cursor position (character position), expecting the cursor position to be in AX. Modifies the AL, BX, and DX registers.
         mov bx, ax
@@ -74,7 +152,7 @@ section .text
         mov [es:di], bh
         ret
     writebytes:
-        ; Writes multiple bytes as a zero-terminated string. Expects DI to be the character position and SI to be a memory addresss pointing to the zero-terminated string. (This function spills over into writebytesmid and writebytesend). Modifies the AX, BX, ES, GS, and DI registers.
+        ; Writes multiple bytes as a zero-terminated string. Max string length = 2 ^ 16 Expects DI to be the character position and SI to be a memory address pointing to the zero-terminated string. (This function spills over into writebytesmid and writebytesend). Modifies the AX, BX, ES, GS, and DI registers.
         add di, di
         xor ax, ax
         mov gs, ax
@@ -95,5 +173,3 @@ section .text
         jmp writebytesmid
     writebytesend:
         ret
-    string:
-        db "Hello, world!", 0x0
