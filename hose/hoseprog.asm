@@ -1,3 +1,5 @@
+; This is an assembly program meant to be compiled and run as a program in hose (cmd.asm).
+
 ; 0x8400: keyboard buffer location
 ; 0x7F60: filesystem location
 ; 0x9000: programs are loaded here
