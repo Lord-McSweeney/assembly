@@ -19,4 +19,6 @@ cmd> exit
 
 `loadboot.asm` is the bootloader for all of these. These programs expect to be run from 0x7e00, which the bootloader will do, if run correctly.
 
+`hoseprog.asm` can be compiled into a raw binary that can be run from Hose. However, Hose can run only 27 byte binaries. Interrupts 0x60, 0x61, and 0x62 can be used.
+
 All the files that end in `.bin` are binaries that can be run from an emulator.
