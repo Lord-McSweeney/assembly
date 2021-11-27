@@ -22,3 +22,5 @@ cmd> exit
 `hoseprog.asm` can be compiled into a raw binary that can be run from Hose. However, Hose can run only 27 byte binaries. Interrupts 0x60, 0x61, and 0x62 can be used.
 
 All the files that end in `.bin` are binaries that can be run from an emulator, except `hoseprog.bin`, which can be run from Hose.
+
+`cmdraw.asm` can be directly compiled and run. Check the file for more information.
