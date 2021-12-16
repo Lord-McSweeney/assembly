@@ -24,3 +24,26 @@ cmd> exit
 All the files that end in `.bin` are binaries that can be run from an emulator, except `hoseprog.bin`, which can be run from Hose.
 
 `cmdraw.asm` can be directly compiled and run. Check the file for more information.
+
+
+UPDATE (Dec 15 2021)
+
+cmd2.asm- Hose updated
+
+64 byte files (55 byte body, 8 byte filename)
+
+8 files
+
+Loads from disk/diskette/CD-ROM (8 sectors)
+
+Current files:
+```
+halt.lbc
+wait.lbc [time]
+cmd?.lbc
+prnt.lbc
+echo.lbc [string]
+list.lbc
+read.lbc [filename]
+ftyp.txt
+```
